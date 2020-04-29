@@ -51,7 +51,7 @@ class LoginPage extends React.Component {
     }
     render() {
         const { classes } = this.props;
-        const { email, password, submitted } = this.state;
+        const { email, password } = this.state;
 
         return (
             <Grid container className={classes.root} justify="center">
@@ -60,8 +60,8 @@ class LoginPage extends React.Component {
                         <Avatar><LockOutlined /></Avatar>
                         <Typography variant="h4">Sign in</Typography>
                         <form onSubmit={this.handleSubmit} className={classes.form} >
-                            <TextField id="outlined-basic" name="email" label="Email address" variant="outlined" fullWidth required margin="normal" value={this.state.email} onChange={this.handleChange} />
-                            <TextField id="outlined-basic" name="password" label="Password" variant="outlined" fullWidth required margin="normal" value={this.state.password} onChange={this.handleChange} />
+                            <TextField id="outlined-basic" name="email" label="Email address" variant="outlined" fullWidth required margin="normal" value={email} onChange={this.handleChange} />
+                            <TextField id="outlined-password-input" type="password" name="password" label="Password" variant="outlined" fullWidth required margin="normal" value={password} onChange={this.handleChange} />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Remember me"

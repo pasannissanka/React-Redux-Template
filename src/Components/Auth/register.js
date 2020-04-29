@@ -4,6 +4,8 @@ import { Grid, Paper, Avatar, TextField, Typography, FormControlLabel, Checkbox,
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/core/styles';
 import { LockOutlined } from '@material-ui/icons'
+import { userActions } from '../../Actions/user.actions';
+import { connect } from 'react-redux';
 
 const useStyles = theme => ({
     root: {
@@ -20,10 +22,50 @@ const useStyles = theme => ({
 });
 
 class RegisterPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: {
+                name: '',
+                email: '',
+                password: '',
+            },
+
+            submitted: false,
+            // errors: {}
+        };
+
+        this.props.logout();
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleChange(e) {
+        const { name, value } = e.target;
+        const { user } = this.state;
+        this.setState({ 
+            user: {
+                ...user,
+                [name] : value
+            }
+         });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        this.setState({
+            submitted: true
+        });
+        const { user } = this.state;
+        if (user.name && user.email && user.password) {
+            this.props.register(user);
+        }
+    }
 
 
     render() {
-        const { classes } = this.props
+        const { classes } = this.props;
+        const { user } = this.state;
         return (
             <Grid container className={classes.root} justify="center"
                 alignItems="center">
@@ -32,11 +74,49 @@ class RegisterPage extends React.Component {
                     <div className={classes.Paper}>
                         <Avatar><LockOutlined /></Avatar>
                         <Typography variant="h4">Sign up</Typography>
-                        <form action="" className={classes.form} >
-                            <TextField id="outlined-basic" label="Email address" variant="outlined" fullWidth required margin="normal" />
-                            <TextField id="outlined-basic" label="User Name" variant="outlined" fullWidth required margin="normal" />
-                            <TextField id="outlined-basic" label="Password" variant="outlined" fullWidth required margin="normal" />
-                            <TextField id="outlined-basic" label="Retype password" variant="outlined" fullWidth required margin="normal" />
+                        <form onSubmit={this.handleSubmit} className={classes.form} >
+                            <TextField
+                                id="outlined-basic"
+                                label="Email address"
+                                variant="outlined"
+                                fullWidth
+                                required
+                                margin="normal"
+                                value={user.email}
+                                onChange={this.handleChange}
+                                type="email"
+                                name="email" />
+                            <TextField
+                                id="outlined-basic"
+                                label="User Name"
+                                variant="outlined"
+                                fullWidth
+                                required
+                                margin="normal"
+                                value={user.name}
+                                onChange={this.handleChange}
+                                name="name" />
+                            <TextField
+                                id="outlined-password-input"
+                                type="password"
+                                label="Password"
+                                variant="outlined"
+                                fullWidth required
+                                margin="normal"
+                                value={user.password}
+                                onChange={this.handleChange}
+                                name="password" />
+                            {/* <TextField
+                                id="outlined-password-input"
+                                type="password"
+                                label="Retype password"
+                                variant="outlined"
+                                fullWidth
+                                required
+                                margin="normal"
+                                value={confPassword}
+                                onChange={this.handleChange}
+                                name="confPassword" /> */}
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Remember me"
@@ -70,8 +150,22 @@ class RegisterPage extends React.Component {
     }
 }
 
+function mapState(state) {
+    const { registration } = state.registration;
+    return { registration };
+}
+
+const actionCreators = {
+    register: userActions.register,
+    logout: userActions.logout
+};
+
 RegisterPage.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(useStyles)(RegisterPage)
+// export default withStyles(useStyles)(RegisterPage)
+
+const connectedRegisterPage = connect(mapState, actionCreators)(RegisterPage);
+const stylePage = withStyles(useStyles)(connectedRegisterPage)
+export { stylePage as RegisterPage }

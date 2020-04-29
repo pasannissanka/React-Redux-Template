@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,7 +21,6 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import DashboardUI from '../Components/DashboardUI';
 import { Button, withTheme } from '@material-ui/core';
 import { Home, ChatBubble } from '@material-ui/icons';
-import { userActions } from '../../../Actions/user.actions';
 import { connect } from 'react-redux';
 
 const drawerWidth = 240;
@@ -110,14 +108,14 @@ function ListItemLink(props) {
   return <ListItem button component="a" {...props} />;
 }
 
-class DashboardLayout extends React.Component {
+class Dashboard extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       open: false,
     }
-    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this); 
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
   }
@@ -191,14 +189,14 @@ class DashboardLayout extends React.Component {
           <Divider />
           <List>
 
-            <ListItemLink href="/home">
+            <ListItemLink href="/">
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </ListItemLink>
 
-            <ListItemLink href="/home/chat">
+            <ListItemLink href="/chat">
               <ListItemIcon>
                 <ChatBubble />
               </ListItemIcon>
@@ -222,13 +220,11 @@ class DashboardLayout extends React.Component {
           })}
         >
           <div className={classes.drawerHeader} />
-          {/* <p>{this.props.user.email}</p> */}
-          
 
           <BrowserRouter>
 
             <Switch>
-              <Route exact path="/home/" component={DashboardUI} />
+              <Route exact path="/" component={DashboardUI} />
 
 
               {/* <Route path="/dashboard" component={DashboardLayout} /> */}
@@ -250,14 +246,12 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  logout: userActions.logout,
-  // deleteUser: userActions.delete
 }
 
-const connectedHomePage = connect(mapState, actionCreators)(DashboardLayout);
+const connectedHomePage = connect(mapState, actionCreators)(Dashboard);
 // export { connectedHomePage as HomePage };
 
 
 const stylePage = withStyles(useStyles)(connectedHomePage)
 const themePage = withTheme(stylePage)
-export { themePage as DashboardLayout }
+export { themePage as Dashboard }
